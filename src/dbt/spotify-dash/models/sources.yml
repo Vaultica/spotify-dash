@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: spotify
+    tables:
+      - name: all_albums
+      - name: play_history
+      - name: play_history_new
+
+  - name: strava
+    tables:
+      - name: all_activities
