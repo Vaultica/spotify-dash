@@ -23,34 +23,7 @@ def flatten_json(y):
 
     flatten(y)
     return out
-'''
-# Fetch all  albums
 
-idx = 0
-all_albums = pd.DataFrame()
-scope = 'user-library-read'
-
-while True:
-    try:
-        results = sp.current_user_saved_albums(limit=10, offset=(10*idx)+1)
-    except:
-        token = util.prompt_for_user_token(USER, scope)
-        sp = spotipy.Spotify(auth=token)
-        results = sp.current_user_saved_albums(limit=10, offset=(10*idx)+1)
-        print ("obtained new token {}".format(token))
-
-    if len(results['items']) == 0:
-        break
-    idx += 1
-    print ('Fetching page {}'.format(idx))
-    dic_flattened = [flatten_json(d) for d in results['items']]
-    all_albums = all_albums.append(pd.DataFrame(dic_flattened))
-
-print ('All albums fetched')
-
-all_albums[['album_name','album_artists_0_name', 'album_uri']].sort_values(by='album_artists_0_name')\
-     .to_excel('all_albums.xlsx')
-'''
 # Get recently played tracks
 import requests
 
@@ -91,8 +64,3 @@ dataset = bigquery_client.dataset(dataset_name)
 df_recently_played = df[['track_name','played_at', 'track_album_artists_0_name', 'track_album_name', 'track_type', 'track_uri']]
 
 gbq.to_gbq(df_recently_played, 'spotify.play_history', project_id, if_exists='append')
-
-# Retrieve and show results
-#df = gbq.read_gbq('SELECT * FROM [secret-compass-181513:spotify.playback_history] order by played_at desc LIMIT 1000', project_id)
-#df ['track_url'] = df['track_uri'].str.replace(r'spotify:track:', 'https://open.spotify.com/track/')
-#df.head(20)
